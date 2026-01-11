@@ -14,8 +14,6 @@ env:
   PROJECT_ID: ai-mvp-452812
   SERVICE_NAME: innovation-scorer
   REGION: europe-west1
-  # Use existing Artifact Registry repo that Cloud Run creates
-  IMAGE_NAME: europe-west1-docker.pkg.dev/ai-mvp-452812/cloud-run-source-deploy/innovation-scorer
 
 permissions:
   contents: read
@@ -39,23 +37,14 @@ jobs:
       with:
         project_id: ${{ env.PROJECT_ID }}
 
-    - name: Configure Docker for Artifact Registry
-      run: gcloud auth configure-docker europe-west1-docker.pkg.dev
-
-    - name: Build Docker image
+    - name: Build and Push with Cloud Build
       run: |
-        docker build -t ${{ env.IMAGE_NAME }}:${{ github.sha }} --no-cache .
-        docker tag ${{ env.IMAGE_NAME }}:${{ github.sha }} ${{ env.IMAGE_NAME }}:latest
-
-    - name: Push Docker image
-      run: |
-        docker push ${{ env.IMAGE_NAME }}:${{ github.sha }}
-        docker push ${{ env.IMAGE_NAME }}:latest
+        gcloud builds submit --tag europe-west1-docker.pkg.dev/${{ env.PROJECT_ID }}/cloud-run-source-deploy/${{ env.SERVICE_NAME }}:${{ github.sha }}
 
     - name: Deploy to Cloud Run
       run: |
         gcloud run deploy ${{ env.SERVICE_NAME }} \
-          --image ${{ env.IMAGE_NAME }}:${{ github.sha }} \
+          --image europe-west1-docker.pkg.dev/${{ env.PROJECT_ID }}/cloud-run-source-deploy/${{ env.SERVICE_NAME }}:${{ github.sha }} \
           --region ${{ env.REGION }} \
           --platform managed \
           --allow-unauthenticated \
