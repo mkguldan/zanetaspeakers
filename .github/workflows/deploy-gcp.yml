@@ -14,6 +14,7 @@ env:
   PROJECT_ID: ai-mvp-452812
   SERVICE_NAME: innovation-scorer
   REGION: europe-west1
+  IMAGE_NAME: gcr.io/ai-mvp-452812/innovation-scorer
 
 permissions:
   contents: read
@@ -37,13 +38,27 @@ jobs:
       with:
         project_id: ${{ env.PROJECT_ID }}
 
-    - name: Deploy to Cloud Run (source deploy)
+    - name: Configure Docker for GCR
+      run: gcloud auth configure-docker
+
+    - name: Build Docker image
+      run: |
+        docker build -t ${{ env.IMAGE_NAME }}:${{ github.sha }} --no-cache .
+        docker tag ${{ env.IMAGE_NAME }}:${{ github.sha }} ${{ env.IMAGE_NAME }}:latest
+
+    - name: Push Docker image to GCR
+      run: |
+        docker push ${{ env.IMAGE_NAME }}:${{ github.sha }}
+        docker push ${{ env.IMAGE_NAME }}:latest
+
+    - name: Deploy to Cloud Run
       run: |
         gcloud run deploy ${{ env.SERVICE_NAME }} \
-          --source . \
+          --image ${{ env.IMAGE_NAME }}:${{ github.sha }} \
           --region ${{ env.REGION }} \
           --platform managed \
           --allow-unauthenticated \
+          --service-account=695406125250-compute@developer.gserviceaccount.com \
           --port=8080 \
           --memory=1Gi \
           --cpu=1 \
