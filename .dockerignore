@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+env/
+.env
+
+# Jupyter
+*.ipynb
+.ipynb_checkpoints/
+
+# Data files
+*.csv
+*.xlsx
+*.xls
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Git
+.git/
+.gitignore
+
+# Local development
+.cursor/
+
+# Original files
+final_event_one*.py
+result*.csv

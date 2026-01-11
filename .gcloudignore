@@ -1,0 +1,38 @@
+# Ignore files for gcloud deployments
+.gcloudignore
+.git
+.gitignore
+.cursor/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+env/
+.env
+
+# Jupyter
+*.ipynb
+.ipynb_checkpoints/
+
+# Data files (don't upload to cloud)
+*.csv
+*.xlsx
+*.xls
+result*.csv
+
+# Original script files
+final_event_one*.py
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Plan files
+*.plan.md
