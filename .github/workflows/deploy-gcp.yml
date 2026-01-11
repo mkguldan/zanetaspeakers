@@ -13,7 +13,9 @@ env:
   PROJECT_ID: ai-mvp-452812
   SERVICE_NAME: innovation-scorer
   REGION: europe-west1
-  IMAGE_NAME: gcr.io/ai-mvp-452812/innovation-scorer
+  AR_LOCATION: europe-west1
+  REPOSITORY: cloud-run-source-deploy
+  IMAGE_NAME: europe-west1-docker.pkg.dev/ai-mvp-452812/cloud-run-source-deploy/innovation-scorer
 
 permissions:
   contents: read
@@ -37,15 +39,15 @@ jobs:
       with:
         project_id: ${{ env.PROJECT_ID }}
 
-    - name: Configure Docker for GCR
-      run: gcloud auth configure-docker
+    - name: Configure Docker for Artifact Registry
+      run: gcloud auth configure-docker ${{ env.AR_LOCATION }}-docker.pkg.dev
 
     - name: Build Docker image
       run: |
         docker build -t ${{ env.IMAGE_NAME }}:${{ github.sha }} --no-cache .
         docker tag ${{ env.IMAGE_NAME }}:${{ github.sha }} ${{ env.IMAGE_NAME }}:latest
 
-    - name: Push Docker image to GCR
+    - name: Push Docker image to Artifact Registry
       run: |
         docker push ${{ env.IMAGE_NAME }}:${{ github.sha }}
         docker push ${{ env.IMAGE_NAME }}:latest
