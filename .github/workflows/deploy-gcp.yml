@@ -14,9 +14,6 @@ env:
   PROJECT_ID: ai-mvp-452812
   SERVICE_NAME: innovation-scorer
   REGION: europe-west1
-  AR_LOCATION: europe-west1
-  REPOSITORY: cloud-run-source-deploy
-  IMAGE_NAME: europe-west1-docker.pkg.dev/ai-mvp-452812/cloud-run-source-deploy/innovation-scorer
 
 permissions:
   contents: read
@@ -40,23 +37,10 @@ jobs:
       with:
         project_id: ${{ env.PROJECT_ID }}
 
-    - name: Configure Docker for Artifact Registry
-      run: gcloud auth configure-docker ${{ env.AR_LOCATION }}-docker.pkg.dev
-
-    - name: Build Docker image
-      run: |
-        docker build -t ${{ env.IMAGE_NAME }}:${{ github.sha }} --no-cache .
-        docker tag ${{ env.IMAGE_NAME }}:${{ github.sha }} ${{ env.IMAGE_NAME }}:latest
-
-    - name: Push Docker image to Artifact Registry
-      run: |
-        docker push ${{ env.IMAGE_NAME }}:${{ github.sha }}
-        docker push ${{ env.IMAGE_NAME }}:latest
-
-    - name: Deploy to Cloud Run
+    - name: Deploy to Cloud Run (source deploy)
       run: |
         gcloud run deploy ${{ env.SERVICE_NAME }} \
-          --image ${{ env.IMAGE_NAME }}:${{ github.sha }} \
+          --source . \
           --region ${{ env.REGION }} \
           --platform managed \
           --allow-unauthenticated \
@@ -74,19 +58,6 @@ jobs:
         echo "service-url=$URL" >> $GITHUB_OUTPUT
         echo "✅ Service deployed successfully!"
         echo "🌐 Service URL: $URL"
-
-    - name: Test deployment
-      run: |
-        # Wait for service to be ready
-        sleep 30
-        
-        # Test health endpoint (Streamlit returns 200 on root)
-        response=$(curl -s -o /dev/null -w "%{http_code}" "${{ steps.get-url.outputs.service-url }}/" || echo "000")
-        if [ "$response" = "200" ]; then
-          echo "✅ Health check passed!"
-        else
-          echo "⚠️ Health check returned status: $response (may still be starting)"
-        fi
 
     - name: Update deployment status
       if: always()
