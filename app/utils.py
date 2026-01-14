@@ -201,63 +201,14 @@ def load_data_file(uploaded_file) -> Tuple[pd.DataFrame, str]:
 
 
 def process_names(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Process the fullName column to create cleaned versions.
+    """Process the fullName column to create cleaned versions."""
+    if "fullName" not in df.columns:
+        raise ValueError("Column 'fullName' not found in dataset.")
     
-    Handles multiple input scenarios:
-    - If 'fullName' exists: process it normally
-    - If 'fullName_original' exists: use it as source
-    - If 'fullName_ascii' exists (already processed): use as-is
-    - If 'firstName' and 'lastName' exist: combine them
-    """
     df = df.copy()
-    
-    # Check for existing name columns
-    has_fullname = "fullName" in df.columns
-    has_original = "fullName_original" in df.columns
-    has_ascii = "fullName_ascii" in df.columns
-    has_export = "fullName_export" in df.columns
-    has_first_last = "firstName" in df.columns and "lastName" in df.columns
-    
-    # Case 1: Already processed file (has fullName_ascii and fullName_export)
-    if has_ascii and has_export and not has_fullname:
-        # File was already processed, just ensure fullName exists for internal use
-        if has_original:
-            df["fullName"] = df["fullName_original"].apply(clean_full_name)
-        else:
-            # Use fullName_ascii as the fullName
-            df["fullName"] = df["fullName_ascii"]
-            df["fullName_original"] = df["fullName_ascii"]
-        return df
-    
-    # Case 2: Has fullName_original but not fullName
-    if has_original and not has_fullname:
-        df["fullName"] = df["fullName_original"]
-    
-    # Case 3: Has firstName/lastName but no fullName
-    elif has_first_last and not has_fullname:
-        df["fullName"] = df.apply(
-            lambda r: f"{safe_text(r.get('firstName', ''))} {safe_text(r.get('lastName', ''))}".strip(),
-            axis=1
-        )
-    
-    # Case 4: No name column found
-    elif not has_fullname:
-        raise ValueError(
-            "No name column found. Expected one of: 'fullName', 'fullName_original', "
-            "'fullName_ascii', or 'firstName'+'lastName'."
-        )
-    
-    # Now process the fullName column
-    if "fullName_original" not in df.columns:
-        df["fullName_original"] = df["fullName"]
-    
+    df["fullName_original"] = df["fullName"]
     df["fullName"] = df["fullName"].apply(clean_full_name)
-    
-    if "fullName_ascii" not in df.columns:
-        df["fullName_ascii"] = df["fullName"].apply(to_ascii)
-    
-    if "fullName_export" not in df.columns:
-        df["fullName_export"] = df["fullName_ascii"]
+    df["fullName_ascii"] = df["fullName"].apply(to_ascii)
+    df["fullName_export"] = df["fullName_ascii"]
     
     return df

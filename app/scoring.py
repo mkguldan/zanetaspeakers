@@ -186,8 +186,8 @@ class ScoringEngine:
         result["is_head"] = is_head
         result["is_senior"] = is_senior
         
-        if not is_senior:
-            return result
+        # NOTE: Seniority is NO LONGER a hard gate - it only adds bonus points
+        # This allows relevant ICs/managers/specialists to remain eligible
         
         # 4) INNOVATION SIGNAL
         text = self._row_blob(row, search_cols)
