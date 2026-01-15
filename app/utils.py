@@ -178,13 +178,34 @@ def sanitize_for_excel(df: pd.DataFrame) -> pd.DataFrame:
     return df2
 
 
+def _clean_csv_content(raw_bytes: bytes) -> bytes:
+    """
+    Clean problematic characters from CSV content.
+    
+    Removes control characters and normalizes line endings that can cause
+    parser errors (especially with LinkedIn Sales Navigator exports).
+    """
+    # Remove problematic control characters
+    # 0x02 = STX (Start of Text), 0x0B = VT (Vertical Tab)
+    cleaned = raw_bytes.replace(b'\x02', b'').replace(b'\x0b', b'')
+    
+    # Normalize line endings to LF
+    cleaned = cleaned.replace(b'\r\n', b'\n').replace(b'\r', b'\n')
+    
+    return cleaned
+
+
 def load_data_file(uploaded_file) -> Tuple[pd.DataFrame, str]:
     """
     Load a CSV or Excel file into a DataFrame.
     
+    Automatically cleans problematic characters from CSV files.
+    
     Returns:
         Tuple of (DataFrame, event_topic_from_cell_a1)
     """
+    from io import BytesIO
+    
     filename = uploaded_file.name.lower()
     
     if filename.endswith((".xlsx", ".xls")):
@@ -194,12 +215,18 @@ def load_data_file(uploaded_file) -> Tuple[pd.DataFrame, str]:
         _raw = pd.read_excel(uploaded_file, sheet_name=0, header=None)
         event_topic_from_cell = str(_raw.iat[0, 0]) if _raw.size else ""
     else:
-        # Try fast C parser first, fall back to Python parser for malformed files
+        # Read raw bytes and clean problematic characters
+        raw_bytes = uploaded_file.read()
+        cleaned_bytes = _clean_csv_content(raw_bytes)
+        cleaned_file = BytesIO(cleaned_bytes)
+        
+        # Try fast C parser first, fall back to Python parser if needed
         try:
-            df = pd.read_csv(uploaded_file)
+            df = pd.read_csv(cleaned_file)
         except Exception:
-            uploaded_file.seek(0)  # Reset file pointer
-            df = pd.read_csv(uploaded_file, engine='python')
+            cleaned_file.seek(0)
+            df = pd.read_csv(cleaned_file, engine='python')
+        
         event_topic_from_cell = ""  # CSV has no "cell A1"
     
     return df, event_topic_from_cell
