@@ -362,8 +362,8 @@ DIRECTOR_INNOV_PATTERNS = [
     r"\bdirector\b.*\bventure\b|\bdirector\b.*\bventuring\b",
     r"\bdirector\b.*\bR\s*&\s*D\b|\bdirector\b.*\bR&D\b",
     r"\bdirector\b.*\bforesight\b|\bdirector\b.*\bnew business\b|\bdirector\b.*\bbusiness model\b",
-    r"\bdirector\b.*\bdigital transformation\b|\bdirector\b.*\bdigital innovation\b",
-    r"\bdirector\b.*\bai\b|\bdirector\b.*\bartificial intelligence\b|\bdirector\b.*\bgenerative ai\b",
+    r"\bdirector\b.*\bsustainab\w*\b|\bdirector\b.*\bcircular\w*\b|\bdirector\b.*\bnet zero\b",
+    # NOTE: AI/Digital patterns removed - they only score via topic_keyword_packs now
 ]
 
 HEAD_PATTERNS = [
@@ -382,9 +382,7 @@ INNOV_RD_STRONG = [
     r"\bforesight\b|\bscenario\b|\btrend\b|\bhorizon scanning\b|\bstrategic foresight\b",
     r"\bincubator\b|\baccelerator\b|\becosystem\b",
     r"\bsustainab\w*\b|\bcircular\w*\b|\bnet zero\b|\bdecarbon\w*\b|\besg\b",
-    r"\bai\b|\bartificial intelligence\b|\bgenerative ai\b|\bgenai\b|\bllm\b|\bmachine learning\b",
-    r"\bdigital innovation\b|\bdigital transformation\b|\bdigitization\b",
-    r"\bdata\b|\banalytics\b|\biot\b|\binternet of things\b",
+    # NOTE: AI/Digital/Data patterns removed - they only score via topic_keyword_packs now
 ]
 
 TITLE_INNOV_RD = [
@@ -396,8 +394,7 @@ TITLE_INNOV_RD = [
     r"\bforesight\b",
     r"\bincubator\b|\baccelerator\b|\becosystem\b",
     r"\bsustainab\w*\b|\bcircular\w*\b|\bnet zero\b",
-    r"\bdigital innovation\b|\bdigital transformation\b",
-    r"\bai\b|\bartificial intelligence\b|\bgenerative ai\b|\bgenai\b",
+    # NOTE: AI/Digital patterns removed - they only score via topic_keyword_packs now
 ]
 
 ANTI_FUNCTION = [
