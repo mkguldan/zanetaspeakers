@@ -194,7 +194,12 @@ def load_data_file(uploaded_file) -> Tuple[pd.DataFrame, str]:
         _raw = pd.read_excel(uploaded_file, sheet_name=0, header=None)
         event_topic_from_cell = str(_raw.iat[0, 0]) if _raw.size else ""
     else:
-        df = pd.read_csv(uploaded_file)
+        # Try fast C parser first, fall back to Python parser for malformed files
+        try:
+            df = pd.read_csv(uploaded_file)
+        except Exception:
+            uploaded_file.seek(0)  # Reset file pointer
+            df = pd.read_csv(uploaded_file, engine='python')
         event_topic_from_cell = ""  # CSV has no "cell A1"
     
     return df, event_topic_from_cell
