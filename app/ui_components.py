@@ -257,16 +257,20 @@ def render_disqualification_patterns(config: ScoringConfig) -> dict[str, Any]:
 
 def render_themes(config: ScoringConfig) -> dict[str, Any]:
     """Render themes editor and return updated values."""
-    st.subheader("Themes & Keywords")
-    st.caption("Edit themes in JSON format. Each theme has a list of keywords.")
+    st.subheader("🎯 Core Themes (Always Active)")
+    st.caption(
+        "These themes are **always active** regardless of event topic. "
+        "Keep this minimal - just core innovation focus. "
+        "Event-specific themes come from **Topic Keyword Packs** below."
+    )
     
     import json
     
     themes_json = st.text_area(
-        "Themes (JSON)",
+        "Core Themes (JSON)",
         value=json.dumps(config.themes, indent=2),
-        height=300,
-        help="JSON mapping of theme names to keyword lists",
+        height=200,
+        help="JSON mapping of theme names to keyword lists. Keep minimal for flexibility.",
         label_visibility="collapsed"
     )
     
@@ -281,16 +285,21 @@ def render_themes(config: ScoringConfig) -> dict[str, Any]:
 
 def render_topic_keyword_packs(config: ScoringConfig) -> dict[str, Any]:
     """Render topic keyword packs editor and return updated values."""
-    st.subheader("Topic Keyword Packs")
-    st.caption("Keywords activated when their key appears in the event topic")
+    st.subheader("📦 Topic Keyword Packs (Dynamic Event Themes)")
+    st.info(
+        "🔑 **How it works:** When your **Event Topic** contains a key (e.g., 'sustainability'), "
+        "the matching keywords are added to an **'Event Angle (Dynamic)'** theme.\n\n"
+        "**Example:** Event Topic = 'Circularity, Net Zero & Subscription Models'\n"
+        "→ Activates: 'circular', 'net zero', 'subscription' packs"
+    )
     
     import json
     
     packs_json = st.text_area(
         "Keyword Packs (JSON)",
         value=json.dumps(config.topic_keyword_packs, indent=2),
-        height=200,
-        help="JSON mapping of pack keys to keyword lists",
+        height=400,
+        help="JSON mapping of trigger keys to keyword lists. Keys are matched against Event Topic.",
         label_visibility="collapsed"
     )
     

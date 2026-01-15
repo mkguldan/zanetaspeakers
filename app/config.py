@@ -121,67 +121,147 @@ def default_disqualify_title_tech() -> list[str]:
 
 
 def default_themes() -> dict[str, list[str]]:
-    """Return the default themes and their keywords."""
+    """
+    Return the default core themes (always active).
+    
+    NOTE: This is intentionally minimal - just core innovation focus.
+    Event-specific themes are built dynamically from topic_keyword_packs
+    based on the Event Topic you set.
+    """
     return {
-        "Gamechanging Innovation": [
-            "game changing", "gamechanging", "disruptive", "breakthrough",
-            "moonshot", "radical innovation", "transformational innovation"
-        ],
-        "New Business Models & Foresight": [
-            "business model", "business model innovation", "foresight", "scenario",
-            "trend", "horizon scanning", "strategic foresight", "new business"
-        ],
-        "Culture & Leadership for Innovation & Agility": [
-            "innovation culture", "culture", "leadership", "agile", "agility",
-            "change management", "capability building"
-        ],
-        "Digital Innovation & Transformation": [
-            "digital innovation", "digital transformation", "digitization",
-            "platform", "cloud", "transformation"
-        ],
-        "AI & Generative AI, Data & IoT": [
-            "ai", "artificial intelligence", "generative ai", "genai", "llm",
-            "machine learning", "data", "analytics", "iot", "internet of things"
-        ],
-        "Customer Centricity, Front End & Design Thinking": [
-            "customer centric", "customer-centric", "design thinking", "ux",
-            "user experience", "service design", "journey"
-        ],
-        "Innovation for Sustainability, Circularity & Net Zero": [
-            "sustainability", "circular", "circularity", "net zero",
-            "decarbon", "climate", "esg", "carbon"
-        ],
-        "Startup Collaboration, Open Innovation & Ecosystems": [
-            "startup", "start-up", "open innovation", "ecosystem",
-            "partnership", "collaboration", "accelerator", "incubator"
-        ],
-        "Managing, Measuring & Accelerating R&D": [
-            "stage gate", "stage-gate", "governance", "kpi", "metrics",
-            "innovation pipeline", "time to market", "portfolio", "r&d",
-            "research and development"
-        ],
+        "Core Innovation": [
+            "innovation", "innovate", "innovative", "R&D", "research and development",
+            "new product", "incubation", "incubator", "accelerator", "venture",
+            "venturing", "corporate venture", "open innovation", "foresight",
+            "breakthrough", "disruptive", "game changing", "moonshot"
+        ]
     }
 
 
 def default_topic_keyword_packs() -> dict[str, list[str]]:
-    """Return the default topic keyword packs."""
+    """
+    Return the default topic keyword packs.
+    
+    These are used to build dynamic event-angle themes based on the Event Topic.
+    When your Event Topic contains a key (e.g., "sustainability"), the corresponding
+    keywords are added to the "Event Angle (Dynamic)" theme.
+    
+    Example: Event Topic = "Circularity, Net Zero & Subscription Models"
+    - Matches: "circular", "net zero", "subscription"
+    - Creates dynamic theme with all those keywords
+    """
     return {
-        "collaboration": [
-            "culture", "capability building", "learning", "leadership",
-            "change management", "psychological safety", "trust", "talent",
-            "org design", "operating model"
+        # Sustainability & Environment
+        "sustainability": [
+            "sustainability", "sustainable", "ESG", "environmental",
+            "green", "eco-friendly", "responsible"
         ],
-        "ai": [
-            "ai", "artificial intelligence", "generative ai", "genai", "llm",
-            "machine learning", "data", "analytics"
+        "circular": [
+            "circular economy", "circularity", "recycling", "waste reduction",
+            "closed loop", "reuse", "refurbish", "repair", "repairability",
+            "end of life", "material recovery", "upcycling"
+        ],
+        "net zero": [
+            "net zero", "carbon neutral", "decarbonization", "carbon footprint",
+            "emissions", "climate", "carbon reduction", "greenhouse gas"
+        ],
+        "climate": [
+            "climate change", "climate action", "climate tech", "carbon",
+            "emissions reduction", "environmental impact"
+        ],
+        
+        # Business Models
+        "subscription": [
+            "subscription", "as-a-service", "service model", "XaaS",
+            "recurring revenue", "product-as-a-service", "servitization"
         ],
         "business model": [
             "business model", "new business", "growth", "venture", "venturing",
-            "incubator", "accelerator", "corporate venture", "portfolio"
+            "incubator", "accelerator", "corporate venture", "portfolio",
+            "revenue model", "monetization"
         ],
-        "sustain": [
-            "sustainability", "circular", "circularity", "net zero",
-            "decarbon", "climate", "esg"
+        
+        # Digital & Technology
+        "digital": [
+            "digital transformation", "digital innovation", "digitization",
+            "digitalization", "digital strategy"
+        ],
+        "ai": [
+            "artificial intelligence", "AI", "generative AI", "GenAI", "LLM",
+            "machine learning", "deep learning", "neural network"
+        ],
+        "data": [
+            "data analytics", "big data", "data-driven", "data science",
+            "analytics", "business intelligence"
+        ],
+        "iot": [
+            "IoT", "internet of things", "connected devices", "smart devices",
+            "sensors", "industrial IoT", "IIoT"
+        ],
+        
+        # Customer & Experience
+        "customer": [
+            "customer centric", "customer-centric", "customer experience",
+            "customer journey", "customer engagement", "customer value"
+        ],
+        "design": [
+            "design thinking", "user experience", "UX", "service design",
+            "human centered", "human-centered design"
+        ],
+        
+        # Culture & Organization
+        "culture": [
+            "innovation culture", "culture change", "cultural transformation",
+            "mindset", "ways of working"
+        ],
+        "agile": [
+            "agile", "agility", "scrum", "lean", "sprint", "iterative"
+        ],
+        "leadership": [
+            "leadership", "change management", "capability building",
+            "talent development", "organizational change"
+        ],
+        
+        # Collaboration & Ecosystems
+        "startup": [
+            "startup", "start-up", "entrepreneurship", "founder",
+            "startup collaboration", "corporate-startup"
+        ],
+        "ecosystem": [
+            "ecosystem", "open innovation", "partnership", "collaboration",
+            "co-creation", "consortium", "alliance"
+        ],
+        "partner": [
+            "partnership", "strategic partner", "external partner",
+            "collaboration", "joint venture"
+        ],
+        
+        # R&D & Operations
+        "r&d": [
+            "R&D", "research and development", "research", "development",
+            "product development", "technology development"
+        ],
+        "manufacturing": [
+            "manufacturing", "production", "factory", "industry 4.0",
+            "smart manufacturing", "operational excellence"
+        ],
+        
+        # Specific Event Angles
+        "mobility": [
+            "mobility", "automotive", "electric vehicle", "EV",
+            "autonomous", "transportation", "fleet"
+        ],
+        "energy": [
+            "energy", "renewable", "clean energy", "energy transition",
+            "power", "grid", "battery", "storage"
+        ],
+        "health": [
+            "healthcare", "health", "medical", "pharma", "biotech",
+            "life sciences", "patient"
+        ],
+        "food": [
+            "food", "nutrition", "agriculture", "agtech", "food tech",
+            "alternative protein", "plant-based"
         ],
     }
 
