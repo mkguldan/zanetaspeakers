@@ -130,10 +130,7 @@ def default_themes() -> dict[str, list[str]]:
     """
     return {
         "Core Innovation": [
-            "innovation", "innovate", "innovative", "R&D", "research and development",
-            "new product", "incubation", "incubator", "accelerator", "venture",
-            "venturing", "corporate venture", "open innovation", "foresight",
-            "breakthrough", "disruptive", "game changing", "moonshot"
+            "innovation", "innovate", "innovative", "R&D", "research and development"
         ]
     }
 
